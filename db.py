@@ -221,16 +221,16 @@ def select_all_employees(conn):
     """
     Query all rows in the employees table
     :param conn: the Connection object
-    :return:
+    :return rows:
     """
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM employees")
 
         rows = cur.fetchall()
-
-        for row in rows:
-            pass
+        return rows
+        # for row in rows:
+        #     pass
     except Error as e:
         print(e)
     return
@@ -319,10 +319,13 @@ def main():
                     "A2609198700080",
                     "Abiatar",
                     "Festus Uugwanga",
-                    "AbiatarFU.pdf",
-                    "Festus.Abiatar@mha.gov.na",
+                    "Abiatar.pdf",
+                    "Festus.Abiatar@mha.gov.na", 
                 )
-                # create_employee(conn, employee)
+                # employees = emps
+                # for employee in employees:
+                #     create_employee(conn, employee)
+                # update_employee(conn, employee)
 
                 # create a new account
                 account = (
@@ -341,7 +344,7 @@ def main():
                     1,
                 )
                 # create_message(conn, message)
-                update_message(conn, message)
+                # update_message(conn, message)
 
         else:
             print("Error! cannot create the database connection.")
