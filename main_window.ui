@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>main_window</class>
+ <widget class="QMainWindow" name="main_window">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>765</width>
-    <height>535</height>
+    <width>862</width>
+    <height>591</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,72 +15,29 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <widget class="QLabel" name="title_label">
-      <property name="font">
-       <font>
-        <family>Bauhaus 93</family>
-        <pointsize>22</pointsize>
-       </font>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(170, 170, 255);
-color: rgb(175, 214, 255);</string>
-      </property>
-      <property name="text">
-       <string>Payslips Distributor  v1.0</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="table_title_label">
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Staff Members in the Database</string>
-      </property>
-     </widget>
-    </item>
+    <property name="leftMargin">
+     <number>15</number>
+    </property>
+    <property name="topMargin">
+     <number>15</number>
+    </property>
+    <property name="rightMargin">
+     <number>15</number>
+    </property>
+    <property name="bottomMargin">
+     <number>15</number>
+    </property>
     <item row="2" column="0">
      <widget class="QTableWidget" name="table_widget">
       <property name="sizeAdjustPolicy">
        <enum>QAbstractScrollArea::AdjustIgnored</enum>
       </property>
-      <column>
-       <property name="text">
-        <string>Select</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>ID</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
+      <property name="rowCount">
+       <number>0</number>
+      </property>
+      <attribute name="verticalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
       <column>
        <property name="text">
         <string>Employee Code</string>
@@ -155,8 +112,62 @@ color: rgb(175, 214, 255);</string>
       </column>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="title_label">
+      <property name="font">
+       <font>
+        <family>Bauhaus 93</family>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(170, 170, 255);
+color: rgb(175, 214, 255);</string>
+      </property>
+      <property name="text">
+       <string>Payslips Distributor  v1.0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="table_title_label">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Staff Members in the Database</string>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="0">
      <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <item row="1" column="5" colspan="2">
+       <widget class="QPushButton" name="start_button">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 255, 0);
+font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Start Process</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0" colspan="6">
        <widget class="QLabel" name="file_url_label">
         <property name="styleSheet">
@@ -182,18 +193,6 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="sender_label">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Sender Email:</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="acc_combo">
         <property name="font">
@@ -206,6 +205,17 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
           <string>username@gmail.com</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="cancel_button">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 0, 0);
+font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -228,25 +238,15 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
         </property>
        </spacer>
       </item>
-      <item row="1" column="4">
-       <widget class="QPushButton" name="cancel_button">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 0, 0);
-font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+      <item row="1" column="0">
+       <widget class="QLabel" name="sender_label">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
         </property>
         <property name="text">
-         <string>Cancel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5" colspan="2">
-       <widget class="QPushButton" name="start_button">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 255, 0);
-font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Start Process</string>
+         <string>Sender Email:</string>
         </property>
        </widget>
       </item>
@@ -259,7 +259,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>765</width>
+     <width>862</width>
      <height>21</height>
     </rect>
    </property>
@@ -286,6 +286,8 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <string>View</string>
     </property>
     <addaction name="actionData_Entry"/>
+    <addaction name="actionAccounts_List"/>
+    <addaction name="actionMessage"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -376,6 +378,16 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
   <action name="actionData_Entry">
    <property name="text">
     <string>Staff List</string>
+   </property>
+  </action>
+  <action name="actionAccounts_List">
+   <property name="text">
+    <string>Accounts List</string>
+   </property>
+  </action>
+  <action name="actionMessage">
+   <property name="text">
+    <string>Message</string>
    </property>
   </action>
  </widget>
