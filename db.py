@@ -266,7 +266,7 @@ def select_account(conn, email):
 
         rows = cur.fetchall()
         account = rows[0]
-        print(f'ACCOUNT: {account}')
+        # print(f'ACCOUNT: {account}')
 
     except Error as e:
         print(e)
@@ -283,9 +283,8 @@ def select_all_messages(conn):
         cur.execute("SELECT * FROM messages WHERE rowid=1;")
 
         rows = cur.fetchall()
-
-        for row in rows:
-            pass
+        message = rows[0]
+        return message
     except Error as e:
         print(e)
     return
@@ -357,7 +356,7 @@ def main():
                 # create a new message
                 message = (
                     "{month} Payslip",
-                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\n Regards,\n\n {sender}",
+                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
                     1,
                 )
                 # create_message(conn, message)

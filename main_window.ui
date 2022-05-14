@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout_4">
     <property name="leftMargin">
      <number>15</number>
     </property>
@@ -27,8 +27,8 @@
     <property name="bottomMargin">
      <number>12</number>
     </property>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="title_label">
+    <item row="0" column="0">
+     <widget class="QLabel" name="lbl_title">
       <property name="font">
        <font>
         <family>Bauhaus 93</family>
@@ -51,243 +51,286 @@ color: rgb(175, 214, 255);</string>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="table_title_label">
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Employees in the Database</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0" rowspan="3">
-     <widget class="QTableWidget" name="table_widget">
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustIgnored</enum>
-      </property>
-      <property name="rowCount">
-       <number>0</number>
-      </property>
-      <attribute name="verticalHeaderStretchLastSection">
-       <bool>false</bool>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>Employee Code</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Surname</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>First Name</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>File Name</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Email Address</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-      </column>
-     </widget>
-    </item>
-    <item row="2" column="1" colspan="3">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>Database Actions</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QPushButton" name="start_button_2">
-         <property name="styleSheet">
-          <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-         </property>
-         <property name="text">
-          <string>Add New Employee</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="select_file_button_2">
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 170, 255);
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="1" colspan="3">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Database Actions</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QPushButton" name="btn_add_new_employee">
+             <property name="styleSheet">
+              <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="text">
+              <string>Add New Employee</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_update_employee">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0, 170, 255);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-         </property>
-         <property name="text">
-          <string>Update Employee</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="cancel_button_2">
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 0, 0);
+             </property>
+             <property name="text">
+              <string>Update Employee</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_delete">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 0, 0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-         </property>
+             </property>
+             <property name="text">
+              <string>Delete Employee</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Payslip Month</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QComboBox" name="cbx_month">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <item>
+              <property name="text">
+               <string>Choose Month</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>January</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>February</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>March</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>April</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>May</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>June</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>July</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>August</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>September</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>October</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>November</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>December</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Office</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QComboBox" name="cbx_office">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <item>
+              <property name="text">
+               <string>Omusati</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_update_office">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Add/Update Office</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0" rowspan="2">
+       <widget class="QTableWidget" name="table_widget">
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustIgnored</enum>
+        </property>
+        <property name="rowCount">
+         <number>0</number>
+        </property>
+        <attribute name="verticalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <column>
          <property name="text">
-          <string>Delete Employee</string>
+          <string>Employee Code</string>
          </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="3" column="1" colspan="3">
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="title">
-       <string>Payslip Month</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QComboBox" name="comboBox">
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
-         <item>
-          <property name="text">
-           <string>Choose Month</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>January</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>February</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>March</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>April</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>May</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>June</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>July</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>August</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>September</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>October</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>November</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>December</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+        </column>
+        <column>
+         <property name="text">
+          <string>Surname</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>First Name</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>File Name</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Email Address</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>58</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_database">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Employees in the Database</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
-    <item row="4" column="2">
-     <widget class="Line" name="line_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="3">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>176</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="5" column="0" colspan="4">
+    <item row="2" column="0">
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0" colspan="4">
-       <widget class="QLabel" name="file_url_label">
+       <widget class="QLabel" name="lbl_file_path">
         <property name="font">
          <font>
           <family>MS Shell Dlg 2</family>
@@ -309,7 +352,7 @@ font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
       <item row="0" column="4" rowspan="2">
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="QPushButton" name="select_file_button">
+         <widget class="QPushButton" name="btn_select_file">
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
@@ -323,7 +366,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QPushButton" name="start_button">
+         <widget class="QPushButton" name="btn_start">
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 255, 0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -336,7 +379,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="sender_label">
+       <widget class="QLabel" name="lbl_sender">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -348,7 +391,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="acc_combo">
+       <widget class="QComboBox" name="cbx_account">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -362,7 +405,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="update_acc_button">
+       <widget class="QPushButton" name="btn_update_account">
         <property name="font">
          <font>
           <pointsize>12</pointsize>

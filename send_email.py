@@ -1,32 +1,29 @@
 import os
-import json
 import smtplib
-from load_gui import path, month
 from email.message import EmailMessage
 
-# email = email
-# password = password
-# employees = employees
 
-
-def email_payslip(email, password, employees, _smtp, port, subject, message):
+def email_payslip(email, password, employees, path, sender, _smtp, port, month, message):
     emails_sent = 0
     files = os.listdir(path)
     employee_dict = {employee[3]: employee[4] for employee in employees}
     for file in files:
-        print(f"Current file: {file}")
-        if file in employee_dict.keys():
+        # if file in employee_dict.keys():
+        if file in ['Abiatar.pdf', 'AbiatarFU.pdf']:
             msg = EmailMessage()
-            msg["Subject"] = subject
+            msg["Subject"] = f"{month} Payslip"
             msg["From"] = email
             msg["To"] = employee_dict[file]
-            msg.set_content(message)
+            receiver = file[:-4]
+            msg.set_content(message.format(sender=sender, receiver=receiver, month=month))
+            print(message.format(sender=sender, receiver=receiver, month=month))
             with open(os.path.join(path, file), "rb") as f:
                 file_data = f.read()
             msg.add_attachment(
                 file_data, maintype="application", subtype="octet-stream", filename=file
             )
             with smtplib.SMTP_SSL(_smtp, port) as smtp:
+                print(email, password, _smtp, port, )
                 try:
                     smtp.login(email, password)
                     smtp.send_message(msg)
