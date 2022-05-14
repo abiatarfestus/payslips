@@ -1,13 +1,14 @@
-import fitz
 import os
-from send_email import staffs
-from make_dir import path
+import fitz
+from load_gui import path
+from db import create_connection, select_all_employees
 
 #https://pymupdf.readthedocs.io/en/latest/faq.html#how-to-split-single-pages
 
 
 
 def extract_payslips():
+    employees = select_all_employees(create_connection)
     src = fitz.open(os.path.join(path, 'payslips.pdf'))
     num = 1
     print('Splitting and extracting pdf...')
@@ -18,9 +19,9 @@ def extract_payslips():
         r2 = fitz.Rect(r.width*0.43,0, r.br) # right rect
         r1_text = pg.get_text(clip=r1)
         r2_text = pg.get_text(clip=r2)
-        # print([name[:len(name)-4] for name in staffs.keys()])
-        r1_name = [name[:len(name)-4] for name in staffs.keys() if name[:len(name)-4] in r1_text]
-        r2_name = [name[:len(name)-4] for name in staffs.keys() if name[:len(name)-4] in r2_text]
+        r1_name = [employee[3][:len(employee[3])-4] for employee in employees if employee[0] in r1_text]
+        r2_name = [employee[3][:len(employee[3])-4] for employee in employees if employee[0] in r2_text]
+        # r2_name = [name[:len(name)-4] for name in staffs.keys() if name[:len(name)-4] in r2_text]
 
         #-----CREATE R1 PAYSLIP-------
         new_doc = fitz.open()  # empty output PDF

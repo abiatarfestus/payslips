@@ -225,7 +225,7 @@ def select_all_employees(conn):
     """
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM employees")
+        cur.execute("SELECT * FROM employees ORDER BY surname")
 
         rows = cur.fetchall()
         return rows
@@ -254,6 +254,23 @@ def select_all_accounts(conn):
         print(e)
     return
 
+def select_account(conn, email):
+    """
+    Retrieve an account from the accounts table
+    :param conn: the Connection object
+    :return account:
+    """
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM accounts WHERE email=email")
+
+        rows = cur.fetchall()
+        account = rows[0]
+        print(f'ACCOUNT: {account}')
+
+    except Error as e:
+        print(e)
+    return account
 
 def select_all_messages(conn):
     """
