@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+from popups import display_message
 
 
 def create_connection(db_file):
@@ -13,7 +14,7 @@ def create_connection(db_file):
         conn = sqlite3.connect(db_file)
         return conn
     except Error as e:
-        print(e)
+        display_message(repr(e))
 
     return conn
 
@@ -28,7 +29,7 @@ def create_table(conn, create_table_sql):
         cur = conn.cursor()
         cur.execute(create_table_sql)
     except Error as e:
-        print(e)
+        display_message(repr(e))
 
 
 def create_employee(conn, employee):
@@ -45,7 +46,7 @@ def create_employee(conn, employee):
         cur.execute(sql, employee)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -63,7 +64,7 @@ def create_account(conn, account):
         cur.execute(sql, account)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -81,7 +82,7 @@ def create_message(conn, message):
         cur.execute(sql, message)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -104,7 +105,7 @@ def update_employee(conn, employee):
         cur.execute(sql, employee)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -127,7 +128,7 @@ def update_account(conn, account):
         cur.execute(sql, account)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -147,7 +148,7 @@ def update_message(conn, message):
         cur.execute(sql, message)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -164,7 +165,7 @@ def delete_employee(conn, rowid):
         cur.execute(sql, (rowid,))
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -181,7 +182,7 @@ def delete_account(conn, rowid):
         cur.execute(sql, (rowid,))
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -197,7 +198,7 @@ def delete_all_employees(conn):
         cur.execute(sql)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -213,7 +214,7 @@ def delete_all_accounts(conn):
         cur.execute(sql)
         conn.commit()
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -232,7 +233,7 @@ def select_all_employees(conn):
         # for row in rows:
         #     pass
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -251,7 +252,7 @@ def select_all_accounts(conn):
         for row in rows:
             pass
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 def select_account(conn, email):
@@ -269,7 +270,7 @@ def select_account(conn, email):
         # print(f'ACCOUNT: {account}')
 
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return account
 
 def select_all_messages(conn):
@@ -286,7 +287,7 @@ def select_all_messages(conn):
         message = rows[0]
         return message
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 
@@ -363,9 +364,9 @@ def main():
                 # update_message(conn, message)
 
         else:
-            print("Error! cannot create the database connection.")
+            display_message("Error! cannot create the database connection.")
     except Error as e:
-        print(e)
+        display_message(repr(e))
     return
 
 

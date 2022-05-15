@@ -1,7 +1,7 @@
 import os
 import shutil
 import split_pdf
-import send_email
+from send_email import email_payslip
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from db import (
@@ -10,8 +10,8 @@ from db import (
     select_account,
     select_all_messages,
 )
+from popups import display_message
 from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
-
 
 
 class MainWindow(QMainWindow):
@@ -20,9 +20,13 @@ class MainWindow(QMainWindow):
         loadUi("main_window.ui", self)
         self.office = self.cbx_office.currentText()
         self.month = self.cbx_month.currentText()
-        self.directory = self.office + "_" + self.month # Name (Office_Month) of the new folder to be created to hold extracted files
-        self.path = None # Path to where new payslip files will be saved (parent_dir + directory)
-        self.parent_dir = None # Directory where the payslips file is originally located
+        self.directory = (
+            self.office + "_" + self.month
+        )  # Name (Office_Month) of the new folder to be created to hold extracted files
+        self.path = None  # Path to where new payslip files will be saved (parent_dir + directory)
+        self.parent_dir = (
+            None  # Directory where the payslips file is originally located
+        )
         self.email = self.cbx_account.currentText()
         self.payslips_path = None  # Absolute path of the payslips.pdf file
         self.statusbar.showMessage("Ready")
@@ -44,11 +48,13 @@ class MainWindow(QMainWindow):
         if not os.path.isdir(self.path):
             try:
                 os.mkdir(self.path)
-                print(f"New directory {self.directory} created in {self.parent_dir}")
-            except OSError as error:
-                print(error)
+                self.statusbar.showMessage(
+                    f"New directory {self.directory} created in {self.parent_dir}"
+                )
+                self.statusbar.repaint()
+            except Exception as e:
+                display_message(repr(e))
         return
-
 
     def set_email(self):
         self.email = self.cbx_sender.currentText()
@@ -87,28 +93,41 @@ class MainWindow(QMainWindow):
         return
 
     def start_process(self):
-        if self.month != "Choose Month" and self.payslips_path != None:
-            if self.display_message("confirm_process") == QMessageBox.Yes:
+        if self.month != "Choose Month" and self.payslips_path != None and self.payslips_path != "":
+            if (
+                display_message(
+                    "confirm_process",
+                    office=self.office,
+                    month=self.month,
+                    path=self.lbl_file_path.text(),
+                )
+                == QMessageBox.Yes
+            ):
                 self.parent_dir = os.path.dirname(self.payslips_path)
                 self.file_name = os.path.basename(self.payslips_path)
-                self.path = os.path.join(
-                    self.parent_dir, self.directory
-                )
-                self.path = self.path.replace('\\','/')
+                self.path = os.path.join(self.parent_dir, self.directory)
+                self.path = self.path.replace("\\", "/")
 
                 # =MAKE DIRECTORY=#
                 self.create_dir()
                 try:
-                    shutil.move(os.path.join(self.parent_dir, self.file_name), self.path)
-                    print(f"{self.file_name} moved to the folder: {self.directory}")
+                    shutil.move(
+                        os.path.join(self.parent_dir, self.file_name), self.path
+                    )
+                    self.statusbar.showMessage(
+                        f"{self.file_name} moved to the folder: {self.directory}"
+                    )
+                    self.statusbar.repaint()
                 except Exception as e:
-                    print(e)
+                    display_message(repr(e))
 
                 # =SPLIT AND EXTRACT PDF=#
+                self.statusbar.showMessage("Splitting and extracting pdf...")
+                self.statusbar.repaint()
                 split_pdf.extract_payslips(self.path, self.file_name)
 
                 # =SEND EMAIL=#
-                conn = create_connection('mydb.db')
+                conn = create_connection("mydb.db")
                 account = select_account(conn, self.email)
                 employees = select_all_employees(conn)
                 _message = select_all_messages(conn)
@@ -118,7 +137,7 @@ class MainWindow(QMainWindow):
                 _smtp = account[3]
                 port = account[4]
                 message = _message[1]
-                send_email.email_payslip(
+                email_payslip(
                     self.email,
                     password,
                     employees,
@@ -129,39 +148,10 @@ class MainWindow(QMainWindow):
                     month=self.month,
                     message=message,
                 )
-
-                self.display_message("process_done")
             else:
                 pass
         else:
-            self.display_message("no_file")
-
-    def display_message(self, type):
-        if type == "confirm_process":
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
-            msg.setWindowTitle("Confirm Process")
-            msg.setText(
-                f"You've chosen to process payslips of {self.office} for {self.month} in the file: \n{self.lbl_file_path.text()}"
-            )
-            msg.setInformativeText("Would you like to proceed?")
-            response = msg.exec_()
-            return response
-        elif type == "process_done":
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Information)
-            msg.setWindowTitle("Confirmation")
-            msg.setText("Finished processing!")
-            msg.setInformativeText(f"A total of {100} emails were successfully sent.")
-            response = msg.exec_()
-        elif type == "no_file":
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setWindowTitle("Error")
-            msg.setText("No file or month is selected for processing!")
-            msg.setInformativeText("Please ensure that you've selected both the file with payslips and the pay month.")
-            response = msg.exec_()
+            display_message("no_file")
 
     def cancel_process(self):
         pass
