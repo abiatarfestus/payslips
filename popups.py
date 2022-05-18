@@ -13,15 +13,12 @@ def display_message(message, office=None, month=None, path=None, emails_sent=0):
         msg.setInformativeText("Would you like to proceed?")
         response = msg.exec_()
         return response
-    elif message == "process_done":
+    elif type(message) == int:
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setWindowTitle("Confirmation")
         msg.setText("Finished processing!")
-        if emails_sent < 2:
-            msg.setInformativeText(f"A total of {emails_sent} email was successfully sent.")
-        else:
-            msg.setInformativeText(f"A total of {emails_sent} emails were successfully sent.")
+        msg.setInformativeText(f"Total emails successfully sent: {message}")
         msg.exec_()
     elif message == "no_file":
         msg = QMessageBox()

@@ -11,6 +11,7 @@ def email_payslip(email, password, employees, path, sender, _smtp, port, month, 
         files = os.listdir(path)
         employee_dict = {employee[3]: employee[4] for employee in employees}
         for file in files:
+            print(f'Current file: {file}')
             # if file in employee_dict.keys():
             if file in ['Abiatar.pdf', 'AbiatarFU.pdf']:
                 msg = EmailMessage()
@@ -19,7 +20,7 @@ def email_payslip(email, password, employees, path, sender, _smtp, port, month, 
                 msg["To"] = employee_dict[file]
                 receiver = file[:-4]
                 msg.set_content(message.format(sender=sender, receiver=receiver, month=month))
-                # print(message.format(sender=sender, receiver=receiver, month=month))
+                print(f'Recipient: {msg["To"]}')
                 with open(os.path.join(path, file), "rb") as f:
                     file_data = f.read()
                 msg.add_attachment(
