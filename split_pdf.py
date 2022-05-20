@@ -46,7 +46,7 @@ def extract_payslips(path, file_name):
                 num +=1
             finally:
                 new_doc.close()
+        return True
     except Exception as e:
         display_message(repr(e))
-    print('Splitting and extraction done!')
-    return
+        return False

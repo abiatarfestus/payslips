@@ -130,6 +130,8 @@ class MainWindow(QMainWindow):
                 self.worker.extracting.connect(self.update_statusbar)
                 self.worker.emailing.connect(self.update_statusbar)
                 self.worker.int_message.connect(display_message)
+                self.worker.str_message.connect(display_message)
+                
                 # Start the thread
                 self.thread.start()
             else:

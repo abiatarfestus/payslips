@@ -35,11 +35,11 @@ class Worker(QObject):
 
     def run(self):
         """Long-running task."""
-        self.create_dir()
-        self.extracting.emit('Splitting and extracting PDFs...')
-        extract_payslips(self.path, self.file_name)
-        self.extracting.emit('Finished splitting and extracting PDFs!')
-        self.email_payslip()
+        if self.create_dir():
+            self.extracting.emit('Splitting and extracting PDFs...')
+        if extract_payslips(self.path, self.file_name):
+            self.extracting.emit('Finished splitting and extracting PDFs!')
+            self.email_payslip()
         self.finished.emit()
         
 
@@ -51,15 +51,16 @@ class Worker(QObject):
                 self.dir_created.emit(f"New directory {self.directory} created in {self.parent_dir}")
             except Exception as e:
                 self.str_message.emit(repr(e))
-                return
+                return False
         try:
             shutil.move(
                 os.path.join(self.parent_dir, self.file_name), self.path
             )
             self.dir_created.emit(f"{self.file_name} moved to the folder: {self.directory}")
+            return True
         except Exception as e:
             self.str_message.emit(repr(e))
-        return
+            return False
 
 
     def email_payslip(self):
