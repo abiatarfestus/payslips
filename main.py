@@ -6,7 +6,7 @@ import sys
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
-from load_gui import MainWindow # ChooseMonthDialog
+from load_gui import MainWindow, EmployeeDialog# ChooseMonthDialog
 
 # ====================================LOAD APPLICATION=======================================#
 app = QApplication(sys.argv)

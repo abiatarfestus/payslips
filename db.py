@@ -230,6 +230,24 @@ def select_all_employees(conn):
 
         rows = cur.fetchall()
         return rows
+    except Error as e:
+        display_message(repr(e))
+    return
+
+def select_employee(conn, employee_code):
+    """
+    Query for one employee from the employees table
+    :param conn: the Connection object
+    :param emp_code: employee code
+    :return rowid:
+    """
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT rowid FROM employees WHERE employee_code=?", (employee_code,))
+
+        row = cur.fetchone()
+        print(f'ROWID: {row, row[0]}')
+        return row[0]
         # for row in rows:
         #     pass
     except Error as e:
@@ -248,12 +266,11 @@ def select_all_accounts(conn):
         cur.execute("SELECT * FROM accounts")
 
         rows = cur.fetchall()
-
-        for row in rows:
-            pass
+        return rows
     except Error as e:
         display_message(repr(e))
     return
+    
 
 def select_account(conn, email):
     """
@@ -263,11 +280,10 @@ def select_account(conn, email):
     """
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM accounts WHERE email=email")
+        cur.execute("SELECT * FROM accounts WHERE email=?", (email,))
 
-        rows = cur.fetchall()
-        account = rows[0]
-        # print(f'ACCOUNT: {account}')
+        row = cur.fetchone()
+        account = row
 
     except Error as e:
         display_message(repr(e))

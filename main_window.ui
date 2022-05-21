@@ -194,9 +194,35 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
                <pointsize>14</pointsize>
               </font>
              </property>
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="insertPolicy">
+              <enum>QComboBox::InsertAlphabetically</enum>
+             </property>
              <item>
               <property name="text">
-               <string>Omusati</string>
+               <string>Office1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Office2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Office3</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Office4</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Office5</string>
               </property>
              </item>
             </widget>
@@ -222,6 +248,12 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        <widget class="QTableWidget" name="table_widget">
         <property name="sizeAdjustPolicy">
          <enum>QAbstractScrollArea::AdjustIgnored</enum>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
         </property>
         <property name="rowCount">
          <number>0</number>
@@ -397,11 +429,6 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
           <pointsize>12</pointsize>
          </font>
         </property>
-        <item>
-         <property name="text">
-          <string>username@gmail.com</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="1" column="2">
