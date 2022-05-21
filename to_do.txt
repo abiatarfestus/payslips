@@ -3,3 +3,4 @@ Revert to sending to all data basemembers
 Check if there's and office and account dfined (no None) before start_process
 Ensure message has {sender} and {receiver} elements.
 Check repaint and threading
+Catch errors when the database is empty

@@ -39,15 +39,21 @@ def create_employee(conn, employee):
     :param employee:
     :return:
     """
+    for field in employee:
+        if len(field) <2:
+            display_message("Record not added! No field should be blank or have less than 2 characters.")
+            return False
     try:
         sql = """ INSERT INTO employees(employee_code,surname,first_name, file_name, email)
                 VALUES(?,?,?,?,?) """
         cur = conn.cursor()
         cur.execute(sql, employee)
         conn.commit()
+        display_message("success_create")
     except Error as e:
         display_message(repr(e))
-    return
+        return False
+    return True
 
 
 def create_account(conn, account):
@@ -57,15 +63,21 @@ def create_account(conn, account):
     :param account:
     :return:
     """
+    for field in account:
+        if field == "":
+            display_message("Record not added! No field should be blank.")
+            return False
     try:
         sql = """ INSERT INTO accounts(name,email,password,smtp,port)
                 VALUES(?,?,?,?,?) """
         cur = conn.cursor()
         cur.execute(sql, account)
         conn.commit()
+        display_message("success_create")
     except Error as e:
         display_message(repr(e))
-    return
+        return False
+    return True
 
 
 def create_message(conn, message):
@@ -81,9 +93,32 @@ def create_message(conn, message):
         cur = conn.cursor()
         cur.execute(sql, message)
         conn.commit()
+        display_message("success_create")
     except Error as e:
         display_message(repr(e))
     return
+
+def create_office(conn, name):
+    """
+    Create a new office
+    :param conn:
+    :param name: office name
+    :return:
+    """
+    if len(name) < 2:
+        display_message("Record not added! Office name cannot be blank or less than 2 characters.")
+        return False
+    try:
+        sql = """ INSERT INTO offices(name)
+                VALUES(?,) """
+        cur = conn.cursor()
+        cur.execute(sql, name)
+        conn.commit()
+        display_message("success_create")
+    except Error as e:
+        display_message(repr(e))
+        return False
+    return True
 
 
 def update_employee(conn, employee):
@@ -93,6 +128,10 @@ def update_employee(conn, employee):
     :param employee:
     :return:
     """
+    for field in employee[:len(employee)-1]:
+        if len(field) <2:
+            display_message("Record not updated! No field should be blank or have less than 2 characters.")
+            return False
     try:
         sql = """ UPDATE employees
                 SET employee_code = ? ,
@@ -104,9 +143,11 @@ def update_employee(conn, employee):
         cur = conn.cursor()
         cur.execute(sql, employee)
         conn.commit()
+        display_message("success_update")
     except Error as e:
         display_message(repr(e))
-    return
+        return False
+    return True
 
 
 def update_account(conn, account):
@@ -127,6 +168,7 @@ def update_account(conn, account):
         cur = conn.cursor()
         cur.execute(sql, account)
         conn.commit()
+        display_message("success_update")
     except Error as e:
         display_message(repr(e))
     return
@@ -147,12 +189,37 @@ def update_message(conn, message):
         cur = conn.cursor()
         cur.execute(sql, message)
         conn.commit()
+        display_message("success_update")
     except Error as e:
         display_message(repr(e))
     return
 
+def update_office(conn, office):
+    """
+    Create a new office
+    :param conn:
+    :param office: tuple of office name and rowid
+    :return:
+    """
+    for field in office:
+        if len(office[0]) < 2:
+            display_message("Record not added! Office name cannot be blank or less than 2 characters.")
+            return False
+    try:
+        sql = """ UPDATE offices
+                SET name = ? 
+                WHERE rowid = ?"""
+        cur = conn.cursor()
+        cur.execute(sql, office)
+        conn.commit()
+        display_message("success_update")
+    except Error as e:
+        display_message(repr(e))
+        return False
+    return True
 
-def delete_employee(conn, rowid):
+
+def delete_employee(conn, employee_code):
     """
     Delete an employee by employee rowid
     :param conn:  Connection to the SQLite database
@@ -160,10 +227,11 @@ def delete_employee(conn, rowid):
     :return:
     """
     try:
-        sql = "DELETE FROM employees WHERE rowid=?"
+        sql = "DELETE FROM employees WHERE employee_code=?"
         cur = conn.cursor()
-        cur.execute(sql, (rowid,))
+        cur.execute(sql, (employee_code,))
         conn.commit()
+        display_message("success_delete")
     except Error as e:
         display_message(repr(e))
     return
@@ -181,6 +249,7 @@ def delete_account(conn, rowid):
         cur = conn.cursor()
         cur.execute(sql, (rowid,))
         conn.commit()
+        display_message("success_delete")
     except Error as e:
         display_message(repr(e))
     return
@@ -306,6 +375,43 @@ def select_all_messages(conn):
         display_message(repr(e))
     return
 
+def select_all_offices(conn):
+    """
+    Query all rows in the offices table
+    :param conn: the Connection object
+    :return offices:
+    """
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM offices")
+
+        offices = cur.fetchall()
+        return offices
+    except Error as e:
+        display_message(repr(e))
+
+def select_office(conn, name):
+    """
+    Retrieve an office from the offices table
+    :param conn: the Connection object
+    :param name: name of offices
+    :return office:
+    """
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM offices WHERE name=?", (name,))
+
+        office = cur.fetchone()
+        return office
+    except Error as e:
+        display_message(repr(e))
+
+def drop_table(conn, sql):
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
+    return
+
 
 def main():
     try:
@@ -328,8 +434,11 @@ def main():
                                     );"""
 
         sql_create_messages_table = """CREATE TABLE IF NOT EXISTS messages (
-                                        subject text NOT NULL,
                                         message text NOT NULL
+                                    );"""
+
+        sql_create_offices_table = """CREATE TABLE IF NOT EXISTS offices (
+                                        name text NOT NULL
                                     );"""
 
         # create a database connection
@@ -346,6 +455,9 @@ def main():
 
                 # create messages table
                 create_table(conn, sql_create_messages_table)
+
+                # create offices table
+                create_table(conn, sql_create_offices_table)
 
                 # create a new employee
                 employee = (
@@ -372,12 +484,11 @@ def main():
 
                 # create a new message
                 message = (
-                    "{month} Payslip",
-                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
-                    1,
+                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}"
                 )
                 # create_message(conn, message)
                 # update_message(conn, message)
+                # drop_table(conn, "DROP TABLE messages")
 
         else:
             display_message("Error! cannot create the database connection.")

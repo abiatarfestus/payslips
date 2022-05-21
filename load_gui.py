@@ -7,14 +7,18 @@ from db import (
     select_all_accounts,
     create_employee,
     select_employee,
-    update_employee
+    update_employee,
+    delete_employee,
 )
 from popups import display_message
 from worker_thread import Worker
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
 
+
 class EmployeeDialog(QDialog):
+    employee_updated = pyqtSignal()
+
     def __init__(self, rowid=0, record=None):
         super(EmployeeDialog, self).__init__()
         loadUi("employee_form.ui", self)
@@ -37,20 +41,35 @@ class EmployeeDialog(QDialog):
         self.btn_cancel.clicked.connect(self.cancel_operation)
 
     def create_update_employee(self):
-        rowid = int(self.row_id.text())
         emp_code = self.employee_code.text()
         surname = self.surname.text()
         first_name = self.first_name.text()
         file_name = self.file_name.text()
         email = self.email.text()
-        conn = create_connection('mydb.db')
+        conn = create_connection("mydb.db")
         if self.rbtn_create_employee.isChecked():
-            create_employee(conn, (emp_code, surname, first_name, file_name, email))
+            if create_employee(conn, (emp_code, surname, first_name, file_name, email)):
+                self.employee_code.setText("")
+                self.surname.setText("")
+                self.first_name.setText("")
+                self.file_name.setText("")
+                self.email.setText("")
         else:
-            update_employee(conn, (emp_code, surname, first_name, file_name, email, rowid))
+            rowid = int(self.row_id.text())
+            if display_message("confirm_update") == QMessageBox.Yes:
+                if update_employee(
+                    conn, (emp_code, surname, first_name, file_name, email, rowid)
+                ):
+                    self.close()
+            else:
+                return
+        print("Moving to emit")
+        self.employee_updated.emit()
+        return
 
     def cancel_operation(self):
-        pass
+        self.close()
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -68,6 +87,7 @@ class MainWindow(QMainWindow):
         self.table_widget.setColumnWidth(4, 200)
         self.btn_select_file.clicked.connect(self.select_file)
         self.btn_start.clicked.connect(self.start_process)
+        self.btn_delete.clicked.connect(self.delete_employee)
         self.cbx_account.currentIndexChanged.connect(self.set_email)
         self.cbx_month.currentIndexChanged.connect(self.set_month)
         self.cbx_office.currentIndexChanged.connect(self.set_office)
@@ -75,12 +95,11 @@ class MainWindow(QMainWindow):
         self.btn_update_employee.clicked.connect(self.update_employee)
         self.btn_update_account.clicked.connect(self.add_update_account)
         self.load_data()
+        self.load_accounts()
 
     def load_data(self):
         conn = create_connection("mydb.db")
         rows = select_all_employees(conn)
-        accounts = select_all_accounts(conn)
-        print(f'Accounts: {accounts}')
         row = 0
         self.table_widget.setRowCount(len(rows))
         for r in rows:
@@ -90,6 +109,10 @@ class MainWindow(QMainWindow):
             self.table_widget.setItem(row, 3, QtWidgets.QTableWidgetItem(r[3]))
             self.table_widget.setItem(row, 4, QtWidgets.QTableWidgetItem(r[4]))
             row = row + 1
+
+    def load_accounts(self):
+        conn = create_connection("mydb.db")
+        accounts = select_all_accounts(conn)
         for account in accounts:
             self.cbx_account.addItem(account[1])
 
@@ -121,7 +144,11 @@ class MainWindow(QMainWindow):
         return
 
     def start_process(self):
-        if self.month != "Choose Month" and self.payslips_path != None and self.payslips_path != "":
+        if (
+            self.month != "Choose Month"
+            and self.payslips_path != None
+            and self.payslips_path != ""
+        ):
             if (
                 display_message(
                     "confirm_process",
@@ -135,7 +162,12 @@ class MainWindow(QMainWindow):
                 # Create a QThread object
                 self.thread = QThread()
                 # Create a worker object
-                self.worker = Worker(month=self.month, office=self.office, payslips_path=self.payslips_path, email=self.email)
+                self.worker = Worker(
+                    month=self.month,
+                    office=self.office,
+                    payslips_path=self.payslips_path,
+                    email=self.email,
+                )
                 # Move worker to the thread
                 self.worker.moveToThread(self.thread)
                 # Connect signals and slots
@@ -148,7 +180,7 @@ class MainWindow(QMainWindow):
                 self.worker.emailing.connect(self.update_statusbar)
                 self.worker.int_message.connect(display_message)
                 self.worker.str_message.connect(display_message)
-                
+
                 # Start the thread
                 self.thread.start()
             else:
@@ -161,26 +193,46 @@ class MainWindow(QMainWindow):
 
     def add_new_employee(self):
         self.employee = EmployeeDialog()
+        self.employee.employee_updated.connect(self.load_data)
         self.employee.show()
 
     def update_employee(self):
         if self.table_widget.currentRow() != -1:
             current_row = self.table_widget.currentRow()
-            print(current_row)
             emp_code_cell = self.table_widget.item(current_row, 0)
-            print(current_row, emp_code_cell.text())
-            if (emp_code_cell and emp_code_cell.text):
+            if emp_code_cell and emp_code_cell.text:
                 employee_code = emp_code_cell.text()
-                conn = create_connection('mydb.db')
+                conn = create_connection("mydb.db")
                 rowid = select_employee(conn, employee_code)
-                record = [self.table_widget.item(current_row, i).text() for i in range(5)]
+                record = [
+                    self.table_widget.item(current_row, i).text() for i in range(5)
+                ]
                 self.employee = EmployeeDialog(rowid, record)
+                self.employee.employee_updated.connect(self.load_data)
                 self.employee.show()
             else:
                 display_message("The selected row has no employee code.")
         else:
             display_message("No row was selected.")
 
-    
     def add_update_account(self):
         pass
+
+    def delete_employee(self, employee_code):
+        if self.table_widget.currentRow() != -1:
+            current_row = self.table_widget.currentRow()
+            emp_code_cell = self.table_widget.item(current_row, 0)
+            record_owner = f"{self.table_widget.item(current_row, 1).text()} {self.table_widget.item(current_row, 2).text()}"
+            if emp_code_cell and emp_code_cell.text:
+                employee_code = emp_code_cell.text()
+                if (
+                    display_message("confirm_delete", record=record_owner)
+                    == QMessageBox.Yes
+                ):
+                    conn = create_connection("mydb.db")
+                    delete_employee(conn, employee_code)
+                    self.load_data()
+            else:
+                display_message("The selected row has no employee code.")
+        else:
+            display_message("No row was selected.")
