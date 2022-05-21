@@ -195,36 +195,11 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
               </font>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="insertPolicy">
               <enum>QComboBox::InsertAlphabetically</enum>
              </property>
-             <item>
-              <property name="text">
-               <string>Office1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Office2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Office3</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Office4</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Office5</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item>
@@ -428,6 +403,9 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
          <font>
           <pointsize>12</pointsize>
          </font>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::InsertAlphabetically</enum>
         </property>
        </widget>
       </item>

@@ -5,6 +5,7 @@ from db import (
     create_connection,
     select_all_employees,
     select_all_accounts,
+    select_all_offices,
     create_employee,
     select_employee,
     update_employee,
@@ -76,6 +77,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         loadUi("main_window.ui", self)
         self.office = self.cbx_office.currentText()
+        print(f'OFFICE: {self.office}')
         self.month = self.cbx_month.currentText()
         self.payslips_path = None
         self.email = self.cbx_account.currentText()
@@ -94,10 +96,11 @@ class MainWindow(QMainWindow):
         self.btn_add_new_employee.clicked.connect(self.add_new_employee)
         self.btn_update_employee.clicked.connect(self.update_employee)
         self.btn_update_account.clicked.connect(self.add_update_account)
-        self.load_data()
+        self.load_employees()
+        self.load_offices()
         self.load_accounts()
 
-    def load_data(self):
+    def load_employees(self):
         conn = create_connection("mydb.db")
         rows = select_all_employees(conn)
         row = 0
@@ -113,8 +116,16 @@ class MainWindow(QMainWindow):
     def load_accounts(self):
         conn = create_connection("mydb.db")
         accounts = select_all_accounts(conn)
+        self.cbx_account.clear()
         for account in accounts:
             self.cbx_account.addItem(account[1])
+
+    def load_offices(self):
+        conn = create_connection("mydb.db")
+        offices = select_all_offices(conn)
+        self.cbx_office.clear()
+        for office in offices:
+            self.cbx_office.addItem(office[0])
 
     def set_email(self):
         self.email = self.cbx_account.currentText()
@@ -148,6 +159,7 @@ class MainWindow(QMainWindow):
             self.month != "Choose Month"
             and self.payslips_path != None
             and self.payslips_path != ""
+            and self.office != ""
         ):
             if (
                 display_message(
@@ -193,7 +205,7 @@ class MainWindow(QMainWindow):
 
     def add_new_employee(self):
         self.employee = EmployeeDialog()
-        self.employee.employee_updated.connect(self.load_data)
+        self.employee.employee_updated.connect(self.load_employees)
         self.employee.show()
 
     def update_employee(self):
@@ -208,7 +220,7 @@ class MainWindow(QMainWindow):
                     self.table_widget.item(current_row, i).text() for i in range(5)
                 ]
                 self.employee = EmployeeDialog(rowid, record)
-                self.employee.employee_updated.connect(self.load_data)
+                self.employee.employee_updated.connect(self.load_employees)
                 self.employee.show()
             else:
                 display_message("The selected row has no employee code.")
@@ -231,7 +243,7 @@ class MainWindow(QMainWindow):
                 ):
                     conn = create_connection("mydb.db")
                     delete_employee(conn, employee_code)
-                    self.load_data()
+                    self.load_employees()
             else:
                 display_message("The selected row has no employee code.")
         else:

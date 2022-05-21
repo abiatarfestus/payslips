@@ -46,8 +46,8 @@ def display_message(message, office=None, month=None, path=None, emails_sent=0, 
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setWindowTitle("Error")
-        msg.setText("No file or month is selected for processing!")
-        msg.setInformativeText("Please ensure that you've selected both the file with payslips and the pay month.")
+        msg.setText("Either the file, month or office is not selected for processing!")
+        msg.setInformativeText("Please ensure that you've selected the file with payslips, the office and the pay month.")
         msg.exec_()
     elif message == "success_update":
         msg = QMessageBox()

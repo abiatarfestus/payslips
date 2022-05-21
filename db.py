@@ -39,19 +39,26 @@ def create_employee(conn, employee):
     :param employee:
     :return:
     """
-    for field in employee:
-        if len(field) <2:
-            display_message("Record not added! No field should be blank or have less than 2 characters.")
+    file_name = employee[3]
+    if len(file_name) > 4 and file_name[len(file_name)-4:].lower() == ".pdf":
+        for field in employee:
+            if len(field) < 2:
+                display_message(
+                    "Record not added! No field should be blank or have less than 2 characters."
+                )
+                return False
+        try:
+            sql = """ INSERT INTO employees(employee_code,surname,first_name, file_name, email)
+                    VALUES(?,?,?,?,?) """
+            cur = conn.cursor()
+            cur.execute(sql, employee)
+            conn.commit()
+            display_message("success_create")
+        except Error as e:
+            display_message(repr(e))
             return False
-    try:
-        sql = """ INSERT INTO employees(employee_code,surname,first_name, file_name, email)
-                VALUES(?,?,?,?,?) """
-        cur = conn.cursor()
-        cur.execute(sql, employee)
-        conn.commit()
-        display_message("success_create")
-    except Error as e:
-        display_message(repr(e))
+    else:
+        display_message("The file name must be more than 4 characters and end with '.pdf'.")
         return False
     return True
 
@@ -88,8 +95,8 @@ def create_message(conn, message):
     :return:
     """
     try:
-        sql = """ INSERT INTO messages(subject,message)
-                VALUES(?,?) """
+        sql = """ INSERT INTO messages(message)
+                VALUES(?) """
         cur = conn.cursor()
         cur.execute(sql, message)
         conn.commit()
@@ -97,6 +104,7 @@ def create_message(conn, message):
     except Error as e:
         display_message(repr(e))
     return
+
 
 def create_office(conn, name):
     """
@@ -106,7 +114,9 @@ def create_office(conn, name):
     :return:
     """
     if len(name) < 2:
-        display_message("Record not added! Office name cannot be blank or less than 2 characters.")
+        display_message(
+            "Record not added! Office name cannot be blank or less than 2 characters."
+        )
         return False
     try:
         sql = """ INSERT INTO offices(name)
@@ -128,24 +138,31 @@ def update_employee(conn, employee):
     :param employee:
     :return:
     """
-    for field in employee[:len(employee)-1]:
-        if len(field) <2:
-            display_message("Record not updated! No field should be blank or have less than 2 characters.")
+    file_name = employee[3]
+    if len(file_name) > 4 and file_name[len(file_name)-4:].lower() == ".pdf":
+        for field in employee[: len(employee) - 1]:
+            if len(field) < 2:
+                display_message(
+                    "Record not updated! No field should be blank or have less than 2 characters."
+                )
+                return False
+        try:
+            sql = """ UPDATE employees
+                    SET employee_code = ? ,
+                        surname = ? ,
+                        first_name = ?,
+                        file_name = ?,
+                        email = ?
+                    WHERE rowid = ?"""
+            cur = conn.cursor()
+            cur.execute(sql, employee)
+            conn.commit()
+            display_message("success_update")
+        except Error as e:
+            display_message(repr(e))
             return False
-    try:
-        sql = """ UPDATE employees
-                SET employee_code = ? ,
-                    surname = ? ,
-                    first_name = ?,
-                    file_name = ?,
-                    email = ?
-                WHERE rowid = ?"""
-        cur = conn.cursor()
-        cur.execute(sql, employee)
-        conn.commit()
-        display_message("success_update")
-    except Error as e:
-        display_message(repr(e))
+    else:
+        display_message("The file name must be more than 4 characters and end with '.pdf'.")
         return False
     return True
 
@@ -183,8 +200,7 @@ def update_message(conn, message):
     """
     try:
         sql = """ UPDATE messages
-                SET subject = ? ,
-                    message = ? 
+                SET message = ? 
                 WHERE rowid = ?"""
         cur = conn.cursor()
         cur.execute(sql, message)
@@ -193,6 +209,7 @@ def update_message(conn, message):
     except Error as e:
         display_message(repr(e))
     return
+
 
 def update_office(conn, office):
     """
@@ -203,7 +220,9 @@ def update_office(conn, office):
     """
     for field in office:
         if len(office[0]) < 2:
-            display_message("Record not added! Office name cannot be blank or less than 2 characters.")
+            display_message(
+                "Record not added! Office name cannot be blank or less than 2 characters."
+            )
             return False
     try:
         sql = """ UPDATE offices
@@ -303,6 +322,7 @@ def select_all_employees(conn):
         display_message(repr(e))
     return
 
+
 def select_employee(conn, employee_code):
     """
     Query for one employee from the employees table
@@ -312,10 +332,12 @@ def select_employee(conn, employee_code):
     """
     try:
         cur = conn.cursor()
-        cur.execute("SELECT rowid FROM employees WHERE employee_code=?", (employee_code,))
+        cur.execute(
+            "SELECT rowid FROM employees WHERE employee_code=?", (employee_code,)
+        )
 
         row = cur.fetchone()
-        print(f'ROWID: {row, row[0]}')
+        print(f"ROWID: {row, row[0]}")
         return row[0]
         # for row in rows:
         #     pass
@@ -339,7 +361,7 @@ def select_all_accounts(conn):
     except Error as e:
         display_message(repr(e))
     return
-    
+
 
 def select_account(conn, email):
     """
@@ -358,7 +380,8 @@ def select_account(conn, email):
         display_message(repr(e))
     return account
 
-def select_all_messages(conn):
+
+def select_message(conn):
     """
     Query all rows in the messages table
     :param conn: the Connection object
@@ -368,12 +391,12 @@ def select_all_messages(conn):
         cur = conn.cursor()
         cur.execute("SELECT * FROM messages WHERE rowid=1;")
 
-        rows = cur.fetchall()
-        message = rows[0]
+        message = cur.fetchone()
         return message
     except Error as e:
         display_message(repr(e))
     return
+
 
 def select_all_offices(conn):
     """
@@ -390,6 +413,7 @@ def select_all_offices(conn):
     except Error as e:
         display_message(repr(e))
 
+
 def select_office(conn, name):
     """
     Retrieve an office from the offices table
@@ -405,6 +429,7 @@ def select_office(conn, name):
         return office
     except Error as e:
         display_message(repr(e))
+
 
 def drop_table(conn, sql):
     cur = conn.cursor()
@@ -465,7 +490,7 @@ def main():
                     "Abiatar",
                     "Festus Uugwanga",
                     "Abiatar.pdf",
-                    "Festus.Abiatar@mha.gov.na", 
+                    "Festus.Abiatar@mha.gov.na",
                 )
                 # employees = emps
                 # for employee in employees:
@@ -483,9 +508,7 @@ def main():
                 # create_account(conn, account)
 
                 # create a new message
-                message = (
-                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}"
-                )
+                message = ("Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",)
                 # create_message(conn, message)
                 # update_message(conn, message)
                 # drop_table(conn, "DROP TABLE messages")
