@@ -3,8 +3,7 @@ import smtplib
 import shutil
 from split_pdf import extract_payslips
 from email.message import EmailMessage
-from PyQt5.QtCore import QObject, QThread, pyqtSignal
-from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
+from PyQt5.QtCore import QObject, pyqtSignal
 from db import (
     create_connection,
     select_all_employees,
@@ -85,7 +84,6 @@ class Worker(QObject):
             files = os.listdir(self.path)
             employee_dict = {employee[3]: employee[4] for employee in employees}
             for file in files:
-                print(f"Current file: {file}")
                 # if file in employee_dict.keys():
                 if file in ["Abiatar.pdf", "AbiatarFU.pdf"]:
                     msg = EmailMessage()
@@ -98,7 +96,6 @@ class Worker(QObject):
                             sender=account_name, receiver=receiver, month=self.month
                         )
                     )
-                    # print(f'Recipient: {msg["To"]}')
                     with open(os.path.join(self.path, file), "rb") as f:
                         file_data = f.read()
                     msg.add_attachment(
@@ -108,7 +105,6 @@ class Worker(QObject):
                         filename=file,
                     )
                     with smtplib.SMTP_SSL(_smtp, port) as smtp:
-                        # print(email, password, _smtp, port, )
                         try:
                             smtp.login(self.email, password)
                             smtp.send_message(msg)

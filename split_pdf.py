@@ -12,7 +12,6 @@ def extract_payslips(path, file_name):
         employees = select_all_employees(conn)
         src = fitz.open(os.path.join(path, file_name))
         num = 1
-        print('Splitting and extracting pdf...')
         for pg in src:  # for each page in input
             r = pg.rect  # input page rectangle
 

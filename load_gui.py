@@ -19,7 +19,7 @@ from db import (
 )
 from popups import display_message
 from worker_thread import Worker
-from PyQt5.QtCore import QObject, QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
 
 class OfficeDialog(QDialog):
