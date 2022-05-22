@@ -7,8 +7,14 @@ from db import (
     select_all_accounts,
     select_all_offices,
     create_employee,
+    create_account,
+    create_office,
     select_employee,
+    select_account,
+    select_office,
     update_employee,
+    update_account,
+    update_office,
     delete_employee,
 )
 from popups import display_message
@@ -16,6 +22,117 @@ from worker_thread import Worker
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
 
+class OfficeDialog(QDialog):
+    office_updated = pyqtSignal()
+
+    def __init__(self, rowid=0, record=None):
+        super(OfficeDialog, self).__init__()
+        loadUi("office_form.ui", self)
+        self.setWindowTitle("Office Form")
+        self.rowid = rowid
+        self.row_id.setEnabled(False)
+        if rowid == 0:
+            self.lbl_office_form_heading.setText("Add a New Office to the Database")
+            self.rbtn_create_office.setChecked(True)
+            self.btn_create.setText("Add")
+        else:
+            self.lbl_office_form_heading.setText("Update an Office in the Database")
+            self.rbtn_update_office.setChecked(True)
+            self.row_id.setText(str(rowid))
+            self.office_name.setText(record[1])
+            self.btn_create.setText("Update")
+        self.btn_create.clicked.connect(self.create_update_office)
+        self.btn_cancel.clicked.connect(self.cancel_operation)
+        self.rbtn_create_office.toggled.connect(self.force_create)
+
+    def create_update_office(self):
+        office_name = self.office_name.text().strip()
+        conn = create_connection("mydb.db")
+        if self.rbtn_create_office.isChecked():
+            if create_office(conn, (office_name,)):
+                self.reset()
+        else:
+            rowid = int(self.row_id.text())
+            if display_message("confirm_update") == QMessageBox.Yes:
+                if update_office(conn, (office_name, rowid)):
+                    self.rbtn_create_office.setChecked(True)
+        self.office_updated.emit()
+        return
+
+    def reset(self):
+        self.office_name.setText("")
+        self.row_id.setText("")
+        self.btn_create.setText("Add")
+        self.lbl_office_form_heading.setText("Add a New Office to the Database")
+
+    def force_create(self):
+        self.reset()
+        self.rbtn_update_office.setCheckable(False)
+
+    def cancel_operation(self):
+        self.close()
+
+class AccountDialog(QDialog):
+    account_updated = pyqtSignal()
+
+    def __init__(self, rowid=0, record=None):
+        super(AccountDialog, self).__init__()
+        loadUi("account_form.ui", self)
+        self.setWindowTitle("Account Form")
+        self.rowid = rowid
+        self.row_id.setEnabled(False)
+        if rowid == 0:
+            self.lbl_acc_form_heading.setText("Add a New Email Account to the Database")
+            self.rbtn_create_account.setChecked(True)
+            self.btn_create.setText("Add")
+        else:
+            self.lbl_acc_form_heading.setText("Update an Email Account in the Database")
+            self.rbtn_update_account.setChecked(True)
+            self.row_id.setText(str(rowid))
+            self.account_name.setText(record[1])
+            self.email.setText(record[2])
+            self.password.setText(record[3])
+            self.smtp.setText(record[4])
+            self.port.setText(str(record[5]))
+            self.btn_create.setText("Update")
+        self.btn_create.clicked.connect(self.create_update_account)
+        self.btn_cancel.clicked.connect(self.cancel_operation)
+        self.rbtn_create_account.toggled.connect(self.force_create)
+
+    def create_update_account(self):
+        account_name = self.account_name.text().strip()
+        email = self.email.text().strip()
+        password = self.password.text()
+        smtp = self.smtp.text().strip()
+        port = self.port.text().strip()
+        conn = create_connection("mydb.db")
+        if self.rbtn_create_account.isChecked():
+            if create_account(conn, (account_name, email, password, smtp, port)):
+                self.reset()
+        else:
+            rowid = int(self.row_id.text())
+            if display_message("confirm_update") == QMessageBox.Yes:
+                if update_account(conn, (account_name, email, password, smtp, port, rowid)):
+                    self.rbtn_create_account.setChecked(True)
+        self.account_updated.emit()
+        return
+
+    def reset(self):
+        self.account_name.setText("")
+        self.email.setText("")
+        self.password.setText("")
+        self.smtp.setText("")
+        self.port.setText("")
+        self.row_id.setText("")
+        self.btn_create.setText("Add")
+        self.lbl_acc_form_heading.setText("Add a New Email Account to the Database")
+
+    def force_create(self):
+        self.reset()
+        self.rbtn_update_account.setCheckable(False)
+
+    def cancel_operation(self):
+        self.close()
 
 class EmployeeDialog(QDialog):
     employee_updated = pyqtSignal()
@@ -23,6 +140,7 @@ class EmployeeDialog(QDialog):
     def __init__(self, rowid=0, record=None):
         super(EmployeeDialog, self).__init__()
         loadUi("employee_form.ui", self)
+        self.setWindowTitle("Employee Form")
         self.rowid = rowid
         if rowid == 0:
             self.lbl_emp_form_heading.setText("Add a New Employee to the Database")
@@ -42,11 +160,11 @@ class EmployeeDialog(QDialog):
         self.btn_cancel.clicked.connect(self.cancel_operation)
 
     def create_update_employee(self):
-        emp_code = self.employee_code.text()
-        surname = self.surname.text()
-        first_name = self.first_name.text()
-        file_name = self.file_name.text()
-        email = self.email.text()
+        emp_code = self.employee_code.text().strip()
+        surname = self.surname.text().strip()
+        first_name = self.first_name.text().strip()
+        file_name = self.file_name.text().strip()
+        email = self.email.text().strip()
         conn = create_connection("mydb.db")
         if self.rbtn_create_employee.isChecked():
             if create_employee(conn, (emp_code, surname, first_name, file_name, email)):
@@ -64,7 +182,6 @@ class EmployeeDialog(QDialog):
                     self.close()
             else:
                 return
-        print("Moving to emit")
         self.employee_updated.emit()
         return
 
@@ -77,7 +194,6 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         loadUi("main_window.ui", self)
         self.office = self.cbx_office.currentText()
-        print(f'OFFICE: {self.office}')
         self.month = self.cbx_month.currentText()
         self.payslips_path = None
         self.email = self.cbx_account.currentText()
@@ -96,6 +212,7 @@ class MainWindow(QMainWindow):
         self.btn_add_new_employee.clicked.connect(self.add_new_employee)
         self.btn_update_employee.clicked.connect(self.update_employee)
         self.btn_update_account.clicked.connect(self.add_update_account)
+        self.btn_update_office.clicked.connect(self.add_update_office)
         self.load_employees()
         self.load_offices()
         self.load_accounts()
@@ -228,7 +345,26 @@ class MainWindow(QMainWindow):
             display_message("No row was selected.")
 
     def add_update_account(self):
-        pass
+        conn = create_connection("mydb.db")
+        record = select_account(conn, self.email)
+        if record == None:
+            rowid = 0
+        else:
+            rowid = record[0]
+        self.account = AccountDialog(rowid, record)
+        self.account.account_updated.connect(self.load_accounts)
+        self.account.show()
+
+    def add_update_office(self):
+        conn = create_connection("mydb.db")
+        record = select_office(conn, self.office)
+        if record == None:
+            rowid = 0
+        else:
+            rowid = record[0]
+        self.office_dialog = OfficeDialog(rowid, record)
+        self.office_dialog.office_updated.connect(self.load_offices)
+        self.office_dialog.show()
 
     def delete_employee(self, employee_code):
         if self.table_widget.currentRow() != -1:

@@ -40,7 +40,7 @@ def display_message(message, office=None, month=None, path=None, emails_sent=0, 
         msg.setIcon(QMessageBox.Information)
         msg.setWindowTitle("Confirmation")
         msg.setText("Finished processing!")
-        msg.setInformativeText(f"Total emails successfully sent: {message}")
+        msg.setInformativeText(f"Total emails sent: {message}")
         msg.exec_()
     elif message == "no_file":
         msg = QMessageBox()

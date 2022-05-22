@@ -75,12 +75,11 @@ class Worker(QObject):
             account = select_account(conn, self.email)
             employees = select_all_employees(conn)
             _message = select_message(conn)
-            print(f'_MESSAGE: {_message}')
-            account_name = account[0]
-            self.email = account[1]
-            password = account[2]
-            _smtp = account[3]
-            port = account[4]
+            account_name = account[1]
+            self.email = account[2]
+            password = account[3]
+            _smtp = account[4]
+            port = account[5]
             message = _message[0]
             emails_sent = 0
             files = os.listdir(self.path)

@@ -40,7 +40,7 @@ def create_employee(conn, employee):
     :return:
     """
     file_name = employee[3]
-    if len(file_name) > 4 and file_name[len(file_name)-4:].lower() == ".pdf":
+    if len(file_name) > 4 and file_name[len(file_name) - 4 :].lower() == ".pdf":
         for field in employee:
             if len(field) < 2:
                 display_message(
@@ -58,7 +58,9 @@ def create_employee(conn, employee):
             display_message(repr(e))
             return False
     else:
-        display_message("The file name must be more than 4 characters and end with '.pdf'.")
+        display_message(
+            "The file name must be more than 4 characters and end with '.pdf'."
+        )
         return False
     return True
 
@@ -113,14 +115,14 @@ def create_office(conn, name):
     :param name: office name
     :return:
     """
-    if len(name) < 2:
+    if len(name[0]) < 2:
         display_message(
             "Record not added! Office name cannot be blank or less than 2 characters."
         )
         return False
     try:
         sql = """ INSERT INTO offices(name)
-                VALUES(?,) """
+                VALUES(?) """
         cur = conn.cursor()
         cur.execute(sql, name)
         conn.commit()
@@ -139,7 +141,7 @@ def update_employee(conn, employee):
     :return:
     """
     file_name = employee[3]
-    if len(file_name) > 4 and file_name[len(file_name)-4:].lower() == ".pdf":
+    if len(file_name) > 4 and file_name[len(file_name) - 4 :].lower() == ".pdf":
         for field in employee[: len(employee) - 1]:
             if len(field) < 2:
                 display_message(
@@ -162,7 +164,9 @@ def update_employee(conn, employee):
             display_message(repr(e))
             return False
     else:
-        display_message("The file name must be more than 4 characters and end with '.pdf'.")
+        display_message(
+            "The file name must be more than 4 characters and end with '.pdf'."
+        )
         return False
     return True
 
@@ -180,7 +184,7 @@ def update_account(conn, account):
                     email = ? ,
                     password = ? ,
                     smtp = ?,
-                    port = ?,
+                    port = ?
                 WHERE rowid = ?"""
         cur = conn.cursor()
         cur.execute(sql, account)
@@ -188,7 +192,8 @@ def update_account(conn, account):
         display_message("success_update")
     except Error as e:
         display_message(repr(e))
-    return
+        return False
+    return True
 
 
 def update_message(conn, message):
@@ -337,13 +342,9 @@ def select_employee(conn, employee_code):
         )
 
         row = cur.fetchone()
-        print(f"ROWID: {row, row[0]}")
         return row[0]
-        # for row in rows:
-        #     pass
     except Error as e:
         display_message(repr(e))
-    return
 
 
 def select_all_accounts(conn):
@@ -371,14 +372,15 @@ def select_account(conn, email):
     """
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM accounts WHERE email=?", (email,))
+        cur.execute(
+            "SELECT rowid, name, email, password, smtp, port FROM accounts WHERE email=?",
+            (email,),
+        )
 
         row = cur.fetchone()
-        account = row
-
+        return row
     except Error as e:
         display_message(repr(e))
-    return account
 
 
 def select_message(conn):
@@ -423,10 +425,13 @@ def select_office(conn, name):
     """
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM offices WHERE name=?", (name,))
+        cur.execute(
+            "SELECT rowid, name FROM offices WHERE name=?",
+            (name,),
+        )
 
-        office = cur.fetchone()
-        return office
+        row = cur.fetchone()
+        return row
     except Error as e:
         display_message(repr(e))
 
@@ -508,7 +513,9 @@ def main():
                 # create_account(conn, account)
 
                 # create a new message
-                message = ("Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",)
+                message = (
+                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
+                )
                 # create_message(conn, message)
                 # update_message(conn, message)
                 # drop_table(conn, "DROP TABLE messages")
