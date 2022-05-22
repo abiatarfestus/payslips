@@ -2,6 +2,7 @@ import os
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from db import (
+    setup_db,
     create_connection,
     select_all_employees,
     select_all_accounts,
@@ -25,6 +26,17 @@ from worker_thread import Worker
 from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication
 from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
 
+def initialise_db():
+    setup_db()
+    conn = create_connection("mydb.db")
+    record = select_message(conn)
+    if record == None:
+        new_message = (
+                "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
+            )
+        create_message(conn, new_message)
+    return
+
 class AboutDialog(QDialog):
     def __init__(self):
         super(AboutDialog, self).__init__()
@@ -39,16 +51,14 @@ class MessageDialog(QDialog):
         self.row_id = rowid
         self.message_editor.setPlainText(message)
         self.btn_save.clicked.connect(self.save_message)
-        self.btn_cancel.clicked.connect(self.cancel_operation)
+        self.btn_cancel.clicked.connect(self.close)
 
     def save_message(self):
         conn = create_connection("mydb.db")
         message = self.message_editor.toPlainText().strip()
         update_message(conn, (message, self.row_id))
-        return
-
-    def cancel_operation(self):
         self.close()
+        return
 
 class OfficeDialog(QDialog):
     office_updated = pyqtSignal()
@@ -70,7 +80,7 @@ class OfficeDialog(QDialog):
             self.office_name.setText(record[1])
             self.btn_create.setText("Update")
         self.btn_create.clicked.connect(self.create_update_office)
-        self.btn_cancel.clicked.connect(self.cancel_operation)
+        self.btn_cancel.clicked.connect(self.close)
         self.rbtn_create_office.toggled.connect(self.force_create)
 
     def create_update_office(self):
@@ -97,9 +107,6 @@ class OfficeDialog(QDialog):
         self.reset()
         self.rbtn_update_office.setCheckable(False)
 
-    def cancel_operation(self):
-        self.close()
-
 class AccountDialog(QDialog):
     account_updated = pyqtSignal()
 
@@ -124,7 +131,7 @@ class AccountDialog(QDialog):
             self.port.setText(str(record[5]))
             self.btn_create.setText("Update")
         self.btn_create.clicked.connect(self.create_update_account)
-        self.btn_cancel.clicked.connect(self.cancel_operation)
+        self.btn_cancel.clicked.connect(self.close)
         self.rbtn_create_account.toggled.connect(self.force_create)
 
     def create_update_account(self):
@@ -159,9 +166,6 @@ class AccountDialog(QDialog):
         self.reset()
         self.rbtn_update_account.setCheckable(False)
 
-    def cancel_operation(self):
-        self.close()
-
 class EmployeeDialog(QDialog):
     employee_updated = pyqtSignal()
 
@@ -186,7 +190,7 @@ class EmployeeDialog(QDialog):
             self.email.setText(record[4])
             self.btn_create.setText("Update")
         self.btn_create.clicked.connect(self.create_update_employee)
-        self.btn_cancel.clicked.connect(self.cancel_operation)
+        self.btn_cancel.clicked.connect(self.close)
 
     def create_update_employee(self):
         emp_code = self.employee_code.text().strip().capitalize()
@@ -214,13 +218,11 @@ class EmployeeDialog(QDialog):
         self.employee_updated.emit()
         return
 
-    def cancel_operation(self):
-        self.close()
-
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        initialise_db()
         loadUi("main_window.ui", self)
         self.office = self.cbx_office.currentText()
         self.month = self.cbx_month.currentText()
@@ -407,15 +409,8 @@ class MainWindow(QMainWindow):
     def update_message(self):
         conn = create_connection("mydb.db")
         record = select_message(conn)
-        if record == None:
-            new_message = (
-                    "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
-                )
-            if create_message(conn, new_message):
-                self.update_message()
-        else:
-            rowid = record[0]
-            message = record[1]
+        rowid = record[0]
+        message = record[1]
         self.message_dialog = MessageDialog(rowid, message)
         self.message_dialog.show()
     

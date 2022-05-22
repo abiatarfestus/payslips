@@ -102,7 +102,6 @@ def create_message(conn, message):
         cur = conn.cursor()
         cur.execute(sql, message)
         conn.commit()
-        display_message("success_create")
     except Error as e:
         display_message(repr(e))
     return
@@ -443,7 +442,7 @@ def drop_table(conn, sql):
     return
 
 
-def main():
+def setup_db():
     try:
         database = "mydb.db"
 
@@ -528,4 +527,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    setup_db()
