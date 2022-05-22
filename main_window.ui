@@ -445,37 +445,26 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionAdd_New"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="actionCopy"/>
-    <addaction name="actionPaste"/>
-    <addaction name="actionCut"/>
-    <addaction name="separator"/>
-    <addaction name="actionFind"/>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-    <addaction name="actionData_Entry"/>
-    <addaction name="actionAccounts_List"/>
-    <addaction name="actionMessage"/>
+    <widget class="QMenu" name="menuAdd_New">
+     <property name="title">
+      <string>Add New</string>
+     </property>
+     <addaction name="file_add_employee"/>
+     <addaction name="file_add_account"/>
+     <addaction name="file_add_office"/>
+    </widget>
+    <addaction name="file_open"/>
+    <addaction name="menuAdd_New"/>
+    <addaction name="file_edit_message"/>
+    <addaction name="file_exit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout"/>
+    <addaction name="help_about"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
@@ -483,7 +472,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <bool>true</bool>
    </property>
   </widget>
-  <action name="actionOpen">
+  <action name="file_open">
    <property name="icon">
     <iconset>
      <normaloff>resources/file-open.png</normaloff>resources/file-open.png</iconset>
@@ -498,16 +487,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionAdd_New">
-   <property name="icon">
-    <iconset>
-     <normaloff>resources/file-new.png</normaloff>resources/file-new.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add New</string>
-   </property>
-  </action>
-  <action name="actionExit">
+  <action name="file_exit">
    <property name="icon">
     <iconset>
      <normaloff>resources/file-exit.png</normaloff>resources/file-exit.png</iconset>
@@ -548,7 +528,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <string>Cut</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="help_about">
    <property name="text">
     <string>About</string>
    </property>
@@ -566,6 +546,31 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
   <action name="actionMessage">
    <property name="text">
     <string>Message</string>
+   </property>
+  </action>
+  <action name="actionEdit_Message">
+   <property name="text">
+    <string>Edit Message</string>
+   </property>
+  </action>
+  <action name="file_edit_message">
+   <property name="text">
+    <string>Edit Message</string>
+   </property>
+  </action>
+  <action name="file_add_employee">
+   <property name="text">
+    <string>Employee</string>
+   </property>
+  </action>
+  <action name="file_add_account">
+   <property name="text">
+    <string>Account</string>
+   </property>
+  </action>
+  <action name="file_add_office">
+   <property name="text">
+    <string>Office</string>
    </property>
   </action>
  </widget>

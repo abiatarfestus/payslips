@@ -79,13 +79,13 @@ class Worker(QObject):
             password = account[3]
             _smtp = account[4]
             port = account[5]
-            message = _message[0]
+            message = _message[1]
             emails_sent = 0
             files = os.listdir(self.path)
             employee_dict = {employee[3]: employee[4] for employee in employees}
             for file in files:
-                # if file in employee_dict.keys():
-                if file in ["Abiatar.pdf", "AbiatarFU.pdf"]:
+                if file in employee_dict.keys():
+                # if file in ["Abiatar.pdf", "AbiatarFU.pdf"]:
                     msg = EmailMessage()
                     msg["Subject"] = f"{self.month} Payslip"
                     msg["From"] = self.email

@@ -198,7 +198,7 @@ def update_account(conn, account):
 
 def update_message(conn, message):
     """
-    update subect, and message
+    update message
     :param conn:
     :param message:
     :return:
@@ -391,7 +391,7 @@ def select_message(conn):
     """
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM messages WHERE rowid=1;")
+        cur.execute("SELECT rowid, message FROM messages WHERE rowid=1;")
 
         message = cur.fetchone()
         return message
