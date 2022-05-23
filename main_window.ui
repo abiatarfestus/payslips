@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>831</width>
-    <height>582</height>
+    <width>1159</width>
+    <height>724</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -437,8 +437,8 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>831</width>
-     <height>21</height>
+     <width>1159</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

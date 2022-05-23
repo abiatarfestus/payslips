@@ -229,11 +229,11 @@ class MainWindow(QMainWindow):
         self.payslips_path = None
         self.email = self.cbx_account.currentText()
         self.statusbar.showMessage("Ready")
-        self.table_widget.setColumnWidth(0, 100)
+        self.table_widget.setColumnWidth(0, 150)
         self.table_widget.setColumnWidth(1, 120)
         self.table_widget.setColumnWidth(2, 150)
         self.table_widget.setColumnWidth(3, 120)
-        self.table_widget.setColumnWidth(4, 200)
+        self.table_widget.setColumnWidth(4, 300)
         self.btn_select_file.clicked.connect(self.select_file)
         self.btn_start.clicked.connect(self.start_process)
         self.btn_delete.clicked.connect(self.delete_employee)
