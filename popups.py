@@ -1,7 +1,9 @@
 from PyQt5.QtWidgets import QMessageBox
 
 
-def display_message(message, office=None, month=None, path=None, emails_sent=0, record=None):
+def display_message(
+    message, office=None, month=None, path=None, emails_sent=0, record=None
+):
     if message == "confirm_process":
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
@@ -18,9 +20,7 @@ def display_message(message, office=None, month=None, path=None, emails_sent=0, 
         msg.setIcon(QMessageBox.Warning)
         msg.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
         msg.setWindowTitle("Confirm Update")
-        msg.setText(
-            "This operation will modify the selected database record."
-        )
+        msg.setText("This operation will modify the selected database record.")
         msg.setInformativeText("Would you like to proceed?")
         response = msg.exec_()
         return response
@@ -29,9 +29,7 @@ def display_message(message, office=None, month=None, path=None, emails_sent=0, 
         msg.setIcon(QMessageBox.Warning)
         msg.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
         msg.setWindowTitle("Confirm Delete")
-        msg.setText(
-            f"This operation will delete {record} from the database."
-        )
+        msg.setText(f"This operation will delete {record} from the database.")
         msg.setInformativeText("Would you like to proceed?")
         response = msg.exec_()
         return response
@@ -47,7 +45,9 @@ def display_message(message, office=None, month=None, path=None, emails_sent=0, 
         msg.setIcon(QMessageBox.Critical)
         msg.setWindowTitle("Error")
         msg.setText("Either the file, month or office is not selected for processing!")
-        msg.setInformativeText("Please ensure that you've selected the file with payslips, the office and the pay month.")
+        msg.setInformativeText(
+            "Please ensure that you've selected the file with payslips, the office and the pay month."
+        )
         msg.exec_()
     elif message == "success_update":
         msg = QMessageBox()

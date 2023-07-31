@@ -26,22 +26,25 @@ from worker_thread import Worker
 from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication
 from PyQt5.QtWidgets import QDialog, QMainWindow, QMessageBox, QFileDialog
 
+
 def initialise_db():
     setup_db()
     conn = create_connection("mydb.db")
     record = select_message(conn)
     if record == None:
         new_message = (
-                "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
-            )
+            "Good day, {receiver}!\n\nAttached please find your payslip of {month} as received from Salary.\nNB: Please take note that the process to extract your payslip from others and email it to you was done with an automated program. Thus, if you received a wrong payslip, do let me know so I fix it, and I do apologise for that.\n\nRegards,\n\n{sender}",
+        )
         create_message(conn, new_message)
     return
+
 
 class AboutDialog(QDialog):
     def __init__(self):
         super(AboutDialog, self).__init__()
         loadUi("about.ui", self)
         self.setWindowTitle("About")
+
 
 class MessageDialog(QDialog):
     def __init__(self, rowid, message):
@@ -59,6 +62,7 @@ class MessageDialog(QDialog):
         update_message(conn, (message, self.row_id))
         self.close()
         return
+
 
 class OfficeDialog(QDialog):
     office_updated = pyqtSignal()
@@ -107,6 +111,7 @@ class OfficeDialog(QDialog):
         self.reset()
         self.rbtn_update_office.setCheckable(False)
 
+
 class AccountDialog(QDialog):
     account_updated = pyqtSignal()
 
@@ -147,7 +152,9 @@ class AccountDialog(QDialog):
         else:
             rowid = int(self.row_id.text())
             if display_message("confirm_update") == QMessageBox.Yes:
-                if update_account(conn, (account_name, email, password, smtp, port, rowid)):
+                if update_account(
+                    conn, (account_name, email, password, smtp, port, rowid)
+                ):
                     self.rbtn_create_account.setChecked(True)
         self.account_updated.emit()
         return
@@ -165,6 +172,7 @@ class AccountDialog(QDialog):
     def force_create(self):
         self.reset()
         self.rbtn_update_account.setCheckable(False)
+
 
 class EmployeeDialog(QDialog):
     employee_updated = pyqtSignal()
@@ -413,7 +421,7 @@ class MainWindow(QMainWindow):
         message = record[1]
         self.message_dialog = MessageDialog(rowid, message)
         self.message_dialog.show()
-    
+
     def view_about(self):
         self.about_dialog = AboutDialog()
         self.about_dialog.show()
