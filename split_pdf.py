@@ -1,5 +1,6 @@
 import os
 import fitz
+encr_method = fitz.PDF_ENCRYPT_AES_256  # strongest encryption
 from popups import display_message
 from db import create_connection, select_all_employees
 
