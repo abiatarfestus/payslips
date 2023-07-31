@@ -8,6 +8,7 @@ wsgi.py
 *.log
 *.pot
 *.pyc
+*.db
 migrations/
 __pycache__/
 #onestop/__pycache__/
