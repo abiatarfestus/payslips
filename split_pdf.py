@@ -53,7 +53,7 @@ def extract_payslips(path, file_name):
                 owner_password = r1_name[0][1]
                 # print(f"OWNER_PW:{owner_password}")
                 user_password = r1_name[0][1]
-                # print(f"USER_PW:{user_password}")
+                print(f"USER1_PW:{user_password}")
                 new_doc.save(
                     os.path.join(path, f"{r1_name[0][0]}.pdf").replace("\\", "/"),
                     owner_pw=owner_password,
@@ -80,8 +80,9 @@ def extract_payslips(path, file_name):
             page = new_doc.new_page(-1, width=r2.width, height=r2.height)
             page.show_pdf_page(page.rect, src, pg.number, clip=r2)
             try:
-                owner_password = r1_name[0][1]
-                user_password = r1_name[0][1]
+                owner_password = r2_name[0][1]
+                user_password = r2_name[0][1]
+                print(f"USER2_PW:{user_password}")
                 new_doc.save(
                     os.path.join(path, f"{r2_name[0][0]}.pdf").replace("\\", "/"),
                     owner_pw=owner_password,
