@@ -43,7 +43,7 @@
 color: rgb(175, 214, 255);</string>
       </property>
       <property name="text">
-       <string>Payslips Distributor  v1.0</string>
+       <string>Payslips Distributor  v1.1</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -438,7 +438,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1159</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -5,7 +5,7 @@ from load_gui import MainWindow
 
 # ====================================LOAD APPLICATION=======================================#
 app = QApplication(sys.argv)
-app.setApplicationName("Payslips Distributor v1.0")
+app.setApplicationName("Payslips Distributor v1.1")
 app.setStyle("Fusion")
 home = MainWindow()
 widget = QtWidgets.QStackedWidget()
