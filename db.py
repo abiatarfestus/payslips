@@ -77,8 +77,8 @@ def create_account(conn, account):
             display_message("Record not added! No field should be blank.")
             return False
     try:
-        sql = """ INSERT INTO accounts(name,email,password,smtp,port)
-                VALUES(?,?,?,?,?) """
+        sql = """ INSERT INTO accounts(name,email,password,smtp,port, secure)
+                VALUES(?,?,?,?,?,?) """
         cur = conn.cursor()
         cur.execute(sql, account)
         conn.commit()
@@ -172,7 +172,7 @@ def update_employee(conn, employee):
 
 def update_account(conn, account):
     """
-    update email, password, smtp,  and port
+    update name, email, password, smtp, port, and secure
     :param conn:
     :param account:
     :return:
@@ -183,7 +183,8 @@ def update_account(conn, account):
                     email = ? ,
                     password = ? ,
                     smtp = ?,
-                    port = ?
+                    port = ?,
+                    secure = ?
                 WHERE rowid = ?"""
         cur = conn.cursor()
         cur.execute(sql, account)
@@ -372,7 +373,7 @@ def select_account(conn, email):
     try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT rowid, name, email, password, smtp, port FROM accounts WHERE email=?",
+            "SELECT rowid, name, email, password, smtp, port, secure FROM accounts WHERE email=?",
             (email,),
         )
 
@@ -459,7 +460,8 @@ def setup_db():
                                         email text NOT NULL UNIQUE,
                                         password text NOT NULL,
                                         smtp text NOT NULL,
-                                        port integer NOT NULL
+                                        port integer NOT NULL,
+                                        secure integer NOT NULL
                                     );"""
 
         sql_create_messages_table = """CREATE TABLE IF NOT EXISTS messages (
@@ -517,7 +519,7 @@ def setup_db():
                 )
                 # create_message(conn, message)
                 # update_message(conn, message)
-                # drop_table(conn, "DROP TABLE messages")
+                #drop_table(conn, "DROP TABLE accounts")
 
         else:
             display_message("Error! cannot create the database connection.")

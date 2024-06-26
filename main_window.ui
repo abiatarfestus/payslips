@@ -43,7 +43,7 @@
 color: rgb(175, 214, 255);</string>
       </property>
       <property name="text">
-       <string>Payslips Distributor  v1.1</string>
+       <string>Payslips Distributor  v1.2</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

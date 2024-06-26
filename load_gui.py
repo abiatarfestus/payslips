@@ -134,6 +134,7 @@ class AccountDialog(QDialog):
             self.password.setText(record[3])
             self.smtp.setText(record[4])
             self.port.setText(str(record[5]))
+            self.cbx_secure.setCurrentText(record[6])  # New
             self.btn_create.setText("Update")
         self.btn_create.clicked.connect(self.create_update_account)
         self.btn_cancel.clicked.connect(self.close)
@@ -145,15 +146,16 @@ class AccountDialog(QDialog):
         password = self.password.text()
         smtp = self.smtp.text().strip()
         port = self.port.text().strip()
+        secure = self.cbx_secure.currentText()
         conn = create_connection("mydb.db")
         if self.rbtn_create_account.isChecked():
-            if create_account(conn, (account_name, email, password, smtp, port)):
+            if create_account(conn, (account_name, email, password, smtp, port, secure)):
                 self.reset()
         else:
             rowid = int(self.row_id.text())
             if display_message("confirm_update") == QMessageBox.Yes:
                 if update_account(
-                    conn, (account_name, email, password, smtp, port, rowid)
+                    conn, (account_name, email, password, smtp, port, secure, rowid)
                 ):
                     self.rbtn_create_account.setChecked(True)
         self.account_updated.emit()

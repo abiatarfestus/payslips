@@ -72,6 +72,7 @@ class Worker(QObject):
         try:
             conn = create_connection("mydb.db")
             account = select_account(conn, self.email)
+            print(account)
             employees = select_all_employees(conn)
             _message = select_message(conn)
             account_name = account[1]
@@ -79,6 +80,7 @@ class Worker(QObject):
             password = account[3]
             _smtp = account[4]
             port = account[5]
+            secure = account[6]
             message = _message[1]
             emails_sent = 0
             files = os.listdir(self.path)
@@ -104,16 +106,29 @@ class Worker(QObject):
                         subtype="octet-stream",
                         filename=file,
                     )
-                    with smtplib.SMTP_SSL(_smtp, port) as smtp:
-                        try:
-                            smtp.login(self.email, password)
-                            smtp.send_message(msg)
-                            self.emailing.emit(
-                                f"Emailing {file} to {employee_dict[file]}..."
-                            )
-                            emails_sent += 1
-                        except Exception as e:
-                            self.str_message.emit(repr(e))
+                    if secure == "TLS":
+                        with smtplib.SMTP(_smtp, port) as smtp:
+                            try:
+                                smtp.starttls()  # Secure the connection
+                                smtp.login(self.email, password)
+                                smtp.send_message(msg)
+                                self.emailing.emit(
+                                    f"Emailing {file} to {employee_dict[file]}..."
+                                )
+                                emails_sent += 1
+                            except Exception as e:
+                                self.str_message.emit(repr(e))
+                    else:
+                        with smtplib.SMTP_SSL(_smtp, port) as smtp:
+                            try:
+                                smtp.login(self.email, password)
+                                smtp.send_message(msg)
+                                self.emailing.emit(
+                                    f"Emailing {file} to {employee_dict[file]}..."
+                                )
+                                emails_sent += 1
+                            except Exception as e:
+                                self.str_message.emit(repr(e))
             self.emailing.emit("Emailing complete!")
             self.int_message.emit(emails_sent)
         except Exception as e:
